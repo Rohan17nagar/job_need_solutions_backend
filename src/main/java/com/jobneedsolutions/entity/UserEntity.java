@@ -1,7 +1,12 @@
 package com.jobneedsolutions.entity;
 
+import java.util.Collection;
 import java.util.Date;
 import java.util.List;
+
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
@@ -27,7 +32,7 @@ import lombok.ToString;
 @AllArgsConstructor
 @ToString
 @Entity
-public class UserEntity {
+public class UserEntity implements UserDetails{
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private long userId;
@@ -38,6 +43,7 @@ public class UserEntity {
 	private String password;
 	private Date dob;
 	private String gender;
+	private Role role;
 	
 	@OneToOne(cascade = CascadeType.ALL)
 	private Address address;
@@ -49,4 +55,38 @@ public class UserEntity {
 	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	@JsonManagedReference(value = "user-jobpost")
 	private List<JobApplications> jobApplications;
+
+	@Override
+	public Collection<? extends GrantedAuthority> getAuthorities() {
+		return List.of(new SimpleGrantedAuthority(role.name()));
+	}
+
+	@Override
+	public String getUsername() {
+		return this.email;
+	}
+
+	@Override
+	public boolean isAccountNonExpired() {
+		// TODO Auto-generated method stub
+		return true;
+	}
+
+	@Override
+	public boolean isAccountNonLocked() {
+		// TODO Auto-generated method stub
+		return true;
+	}
+
+	@Override
+	public boolean isCredentialsNonExpired() {
+		// TODO Auto-generated method stub
+		return true;
+	}
+
+	@Override
+	public boolean isEnabled() {
+		// TODO Auto-generated method stub
+		return true;
+	}
 }

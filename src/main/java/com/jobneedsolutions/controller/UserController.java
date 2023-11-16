@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.jobneedsolutions.dto.UserDetailsDto;
 import com.jobneedsolutions.entity.UserEntity;
 import com.jobneedsolutions.service.UserService;
 
@@ -29,6 +30,19 @@ public class UserController {
 	public ResponseEntity<List<UserEntity>> getAllUsers() {
 		return userService.getAllUsers();
 	}
+	
+	
+	/**
+	 * 
+	 * @param userEntity
+	 * @return
+	 */
+	@GetMapping("/findUserById/{userId}")
+	public ResponseEntity<?> findUserById(@PathVariable long userId){
+		return userService.findUserById(userId);
+	}
+	
+	
 	
 	@PostMapping("/addUser")
 	public ResponseEntity<String> addUser(@RequestBody UserEntity userEntity){
